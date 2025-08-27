@@ -86,6 +86,7 @@ public class LivingEntityMixin {
 
 			for (EquipmentSlot slot : slotsToScan) {
 				if (player.getInventory().getArmorStack(slot.getEntitySlotId()).getItem() instanceof ArmorItem armorItem) {
+					player.getInventory().damageArmor(source, amount, new int[]{slot.getEntitySlotId()});
 					armor += armorItem.getProtection();
 					toughness += armorItem.getToughness();
 					PainMain.log("Adding needed " + armorItem.getProtection() + " | " + armorItem.getToughness());
