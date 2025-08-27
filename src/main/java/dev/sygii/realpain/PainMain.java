@@ -52,8 +52,6 @@ public class PainMain implements ModInitializer {
 	public static final String MOD_ID = "realpain";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
-	public static final Map<DamageSource, List<BodyPart>> sourceToPartMap = new HashMap<>();
-
 	public static final List<DamageDistribution> damageDistributionMap = new ArrayList<>();
 	//public static final Map<Identifier, DamageDistribution> damageDistributionMap = new HashMap<>();
 
@@ -114,31 +112,17 @@ public class PainMain implements ModInitializer {
 			PainAttachments.body.syncFromServer(newPlayer, newPlayer, body);
 		});
 
+		// breaks
 		/*ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
 			PlayerBody body = PainAttachments.body.get(handler.getPlayer());
 			PainAttachments.body.syncFromServer(handler.getPlayer(), handler.getPlayer(), body);
 		});*/
-
-
-		/*Registry.register(Registries.ITEM_GROUP, PAIN_GROUP, FabricItemGroup.builder()
-				.icon(() -> new ItemStack(MORPHINE_ITEM))
-				.displayName(Text.translatable("realpain.items"))
-						.entries((features, entries) -> {
-							entries.add(MORPHINE_ITEM);
-						})
-				.build());*/
-
-		//Registry.register(Registries.ITEM, id("bandage"), MORPHINE_ITEM);
-		//Registry.register(Registries.ITEM, id("bandage"), MEDKIT_ITEM);
-
-		/*ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
-			PlayerBody body = PainAttachments.body.get(handler.player);
-			PainAttachments.body.syncFromServer(handler.player, handler.player, body);
-		});*/
 	}
 
 	public static void log(String s) {
-		LOGGER.info(s);
+		if (MAIN.debugLogging) {
+			LOGGER.info(s);
+		}
 	}
 
 	public static Identifier id(String path) {

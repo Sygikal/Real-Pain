@@ -15,6 +15,8 @@ public class MainConfig extends Config {
         super(PainMain.id("main_config"));
     }
 
+    public boolean debugLogging = false;
+
     public HealthSection PARTS = new HealthSection();
     public static class HealthSection extends ConfigSection {
         public float headWeight = 5;
