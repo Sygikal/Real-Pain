@@ -1,0 +1,35 @@
+{
+  "parent": "realpain:sedated",
+  "display": {
+    "icon": {
+      "item": "realpain:morphine"
+    },
+    "title": {
+      "translate": "advancements.realpain.triple_overdose.title"
+    },
+    "description": {
+      "translate": "advancements.realpain.triple_overdose.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "criteria": {
+    "tripeOverdose": {
+      "trigger": "realpain:overdose_amount",
+      "conditions": {
+        "level": 3
+      }
+    }
+  },
+  "requirements": [
+    [
+      "tripeOverdose"
+    ]
+  ],
+  "rewards": {
+    "experience": 100
+  },
+  "sends_telemetry_event": false
+}

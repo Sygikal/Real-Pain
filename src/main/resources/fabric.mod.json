@@ -1,0 +1,43 @@
+{
+    "schemaVersion": 1,
+    "id": "realpain",
+    "version": "${version}",
+    "name": "Realistic Human Pain and Suffering",
+    "description": "This is an example description! Tell everyone what your mod is about!",
+    "authors": [
+        "Sygikal"
+    ],
+    "contact": {
+        "homepage": "https://fabricmc.net/",
+        "sources": "https://github.com/FabricMC/fabric-example-mod"
+    },
+    "license": "CC0-1.0",
+    "icon": "assets/realpain/icon.png",
+    "environment": "*",
+    "entrypoints": {
+        "main": [
+          "dev.sygii.realpain.PainMain"
+        ],
+        "client": [
+            "dev.sygii.realpain.PainClient"
+        ],
+        "attachmentsapi:attachments": [
+            "dev.sygii.realpain.PainAttachments"
+        ]
+    },
+    "accessWidener": "${aw}",
+    "mixins": [
+        "realpain.mixins.json"
+    ],
+    "depends": {
+        "fabricloader": ">=0.16.14",
+        "minecraft": "${mcdep}",
+        "java": "${javadep}",
+        "fabric-api": "*",
+        "attachmentsapi": ">=1.1.4.3",
+        "fzzy_config": ">=0.6.4"
+    },
+    "suggests": {
+        "another-mod": "*"
+    }
+}

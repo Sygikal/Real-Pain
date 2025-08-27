@@ -1,0 +1,14 @@
+{
+  "item.realpain.morphine": "Vial of Morphine",
+  "item.realpain.bandage": "Bandage",
+  "item.realpain.medicinal_herb": "Medicinal Herb",
+  "item.realpain.medkit": "Medkit",
+  "effect.realpain.morphine": "Sedated",
+  "effect.realpain.overdosed": "Overdosed",
+  "realpain.items": "Real Pain",
+  "advancements.realpain.sedated.title": "Sedated",
+  "advancements.realpain.sedated.description": "Use morphine for the first time",
+  "advancements.realpain.triple_overdose.title": "Triple Overdose",
+  "advancements.realpain.triple_overdose.description": "Don't try this at home",
+  "death.attack.overdose": "%1$s got to high"
+}

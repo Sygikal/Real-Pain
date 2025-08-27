@@ -1,0 +1,8 @@
+{
+    "source": "#minecraft:is_fall",
+    "type": "realpain:split",
+    "parts": [
+        "realpain:left_leg",
+        "realpain:right_leg"
+    ]
+}   

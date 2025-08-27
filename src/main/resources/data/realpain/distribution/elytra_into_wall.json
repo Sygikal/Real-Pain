@@ -1,0 +1,7 @@
+{
+    "source": "minecraft:fly_into_wall",
+    "type": "realpain:split",
+    "parts": [
+        "realpain:head"
+    ]
+}   

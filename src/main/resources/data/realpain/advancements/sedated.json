@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:adventure/root",
+  "display": {
+    "icon": {
+      "item": "realpain:morphine"
+    },
+    "title": {
+      "translate": "advancements.realpain.sedated.title"
+    },
+    "description": {
+      "translate": "advancements.realpain.sedated.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "firstSedation": {
+      "trigger": "realpain:morphine_amount",
+      "conditions": {
+        "level": 1
+      }
+    }
+  },
+  "requirements": [
+    [
+      "firstSedation"
+    ]
+  ],
+  "rewards": {
+    "experience": 3
+  },
+  "sends_telemetry_event": false
+}

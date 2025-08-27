@@ -1,0 +1,7 @@
+{
+    "source": "#minecraft:is_lightning",
+    "type": "realpain:split",
+    "parts": [
+        "realpain:head"
+    ]
+}   

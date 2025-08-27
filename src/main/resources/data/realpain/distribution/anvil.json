@@ -1,0 +1,7 @@
+{
+    "source": "#minecraft:damages_helmet",
+    "type": "realpain:split",
+    "parts": [
+        "realpain:head"
+    ]
+}   

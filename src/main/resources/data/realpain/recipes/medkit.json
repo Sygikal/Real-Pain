@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " t ",
+    "mmm",
+    "bzb"
+  ],
+  "key": {
+    "t": {
+      "item": "minecraft:ghast_tear"
+    },
+    "m": {
+      "item": "realpain:morphine"
+    },
+    "b": {
+      "item": "realpain:bandage"
+    },
+    "z": {
+      "item": "minecraft:magma_cream"
+    }
+  },
+  "result": {
+    "item": "realpain:medkit"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "values": [
+    "minecraft:sugar_cane",
+    "#minecraft:villager_plantable_seeds",
+    {
+      "required": false,
+      "id": "#c:seeds"
+    }
+  ]
+}

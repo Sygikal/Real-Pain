@@ -1,0 +1,8 @@
+{
+    "source": "minecraft:hot_floor",
+    "type": "realpain:split",
+    "parts": [
+        "realpain:left_leg",
+        "realpain:right_leg"
+    ]
+}   

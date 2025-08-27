@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "#B#",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "tag": "minecraft:flowers"
+    },
+    "B": {
+      "tag": "realpain:binder"
+    }
+  },
+  "result": {
+    "item": "realpain:medicinal_herb"
+  }
+}
