@@ -18,7 +18,7 @@ import static dev.sygii.realpain.PainClient.drawHealthRectangle;
 public class Torso extends BodyPart {
 
     public Torso(LivingEntity entity) {
-        super(entity, PainMain.MAIN.PARTS.torsoWeight, true);
+        super(entity, PainMain.MAIN.PARTS.torsoWeight, PainMain.MAIN.PARTS.torsoFatal);
         this.activeSlots.add(EquipmentSlot.CHEST);
     }
 
