@@ -47,28 +47,28 @@ public class PlayerBody extends Body {
             entity.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 40, 0));
         }*/
 
-        addTickedDebuff(PainMain.id("torso"), StatusEffects.WEAKNESS, (part) -> {
+        addTickedDebuff(PainMain.id("torso"), StatusEffects.WEAKNESS, 40, (part) -> {
             if (part.getPartHealth() <= part.getPartMaxHealth() * 0.25f) {
                 return 1;
             }
             return 0;
         });
 
-        addTickedDebuff(PainMain.id("head"), StatusEffects.WEAKNESS, (part) -> {
+        addTickedDebuff(PainMain.id("head"), StatusEffects.WEAKNESS, 40, (part) -> {
             if (part.getPartHealth() <= part.getPartMaxHealth() * 0.25f) {
                 return 1;
             }
             return 0;
         });
 
-        addTickedDebuff(PainMain.id("head"), StatusEffects.NAUSEA, (part) -> {
+        addTickedDebuff(PainMain.id("head"), StatusEffects.NAUSEA, 1000, (part) -> {
             if (part.getPartHealth() <= part.getPartMaxHealth() * 0.15f) {
                 return 1;
             }
             return 0;
         });
 
-        addTickedDebuff(PainMain.id("right_leg"), StatusEffects.SLOWNESS, (part) -> {
+        addTickedDebuff(PainMain.id("right_leg"), StatusEffects.SLOWNESS, 40, (part) -> {
             if (part.getPartHealth() <= part.getPartMaxHealth() * 0.25f) {
                 return 3;
             }
@@ -81,7 +81,7 @@ public class PlayerBody extends Body {
             return 0;
         });
 
-        addTickedDebuff(PainMain.id("left_leg"), StatusEffects.SLOWNESS, (part) -> {
+        addTickedDebuff(PainMain.id("left_leg"), StatusEffects.SLOWNESS, 40, (part) -> {
             if (part.getPartHealth() <= part.getPartMaxHealth() * 0.25f) {
                 return 3;
             }
@@ -94,7 +94,7 @@ public class PlayerBody extends Body {
             return 0;
         });
 
-        addTickedDebuff(PainMain.id("right_arm"), StatusEffects.MINING_FATIGUE, (part) -> {
+        addTickedDebuff(PainMain.id("right_arm"), StatusEffects.MINING_FATIGUE, 40, (part) -> {
             if (part.getPartHealth() <= part.getPartMaxHealth() * 0.25f) {
                 return 3;
             }
@@ -107,7 +107,7 @@ public class PlayerBody extends Body {
             return 0;
         });
 
-        addTickedDebuff(PainMain.id("left_arm"), StatusEffects.MINING_FATIGUE, (part) -> {
+        addTickedDebuff(PainMain.id("left_arm"), StatusEffects.MINING_FATIGUE, 40, (part) -> {
             if (part.getPartHealth() <= part.getPartMaxHealth() * 0.25f) {
                 return 3;
             }
@@ -174,21 +174,24 @@ public class PlayerBody extends Body {
         applyStatusEffectWithAmplifier(StatusEffects.WEAKNESS, amplifier);*/
         this.debuffs.forEach((effect, debuffs) -> {
             AtomicInteger amplifier = new AtomicInteger(-morphineAmount);
+            AtomicInteger duration = new AtomicInteger(0);
+
             debuffs.forEach((debuff -> {
                 amplifier.getAndAdd(debuff.runner().run(debuff.part()));
+                duration.getAndAdd(debuff.duration());
             }));
             //System.out.println(amplifier.get());
-            applyStatusEffectWithAmplifier(effect, amplifier.get());
+            applyStatusEffectWithAmplifier(effect, duration.get(), amplifier.get());
         });
     }
 
-    public void applyStatusEffectWithAmplifier(StatusEffect effect, int amplifier){
+    public void applyStatusEffectWithAmplifier(StatusEffect effect, int duration, int amplifier){
         if(amplifier >= 0){
             StatusEffectInstance s = entity.getStatusEffect(effect);
             if(s == null){
-                entity.addStatusEffect(new StatusEffectInstance(effect, 40, amplifier));
+                entity.addStatusEffect(new StatusEffectInstance(effect, duration, amplifier));
             }else if(s.getDuration() <= 5 || s.getAmplifier() != amplifier){
-                entity.addStatusEffect(new StatusEffectInstance(effect, 40, amplifier));
+                entity.addStatusEffect(new StatusEffectInstance(effect, duration, amplifier));
             }
         }
     }

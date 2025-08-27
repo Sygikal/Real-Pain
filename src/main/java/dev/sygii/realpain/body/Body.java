@@ -62,11 +62,11 @@ public class Body {
         slotToPart.get(slot).add(getPart(id));
     }
 
-    public void addTickedDebuff(Identifier id, StatusEffect effect, DebuffRunner runner) {
+    public void addTickedDebuff(Identifier id, StatusEffect effect, int duration, DebuffRunner runner) {
         if (debuffs.get(effect) == null) {
             debuffs.put(effect, new ArrayList<TickedDebuff>());
         }
-        debuffs.get(effect).add(new TickedDebuff(getPart(id), runner));
+        debuffs.get(effect).add(new TickedDebuff(getPart(id), duration, runner));
     }
 
     public void tick() {
