@@ -103,7 +103,6 @@ public class Body {
     }
 
     public void setDistribution(DamageSource source) {
-        PainMain.log(source.toString());
         this.currentDistribution = getDistribution(source);
     }
 
