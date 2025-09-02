@@ -51,8 +51,8 @@ public class PainClient implements ClientModInitializer {
 	public void onInitializeClient() {
 		ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
 			PainMain.log("Requesting from server!");
-			PainAttachments.body.requestFromServer(client.player);
 			if (client.player != null) {
+				PainAttachments.body.requestFromServer(client.player);
 				boolean slim = Objects.equals(client.player.getModel(), "slim");
 				model = new PlayerEntityModel<>(client.getEntityModelLoader().getModelPart(slim ? EntityModelLayers.PLAYER_SLIM : EntityModelLayers.PLAYER), slim);
 			}
