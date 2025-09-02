@@ -138,7 +138,10 @@ public class BodyPart {
                 }
             }
             for (BodyPart child : this.children) {
-                child.heal(amount / childSize);
+                if (child.getPartHealth() < child.getPartMaxHealth()) {
+                    PainMain.log("Healing child: " + remaining / childSize);
+                    child.heal(remaining / childSize);
+                }
             }
         }
         setHealth(this.health + amount);
