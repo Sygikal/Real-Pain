@@ -34,7 +34,7 @@
         "minecraft": "${mcdep}",
         "java": "${javadep}",
         "fabric-api": "*",
-        "attachmentsapi": ">=1.1.4.3",
+        "attachmentsapi": ">=1.1.4.7",
         "fzzy_config": ">=0.6.4"
     },
     "suggests": {
