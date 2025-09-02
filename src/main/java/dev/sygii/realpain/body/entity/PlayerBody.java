@@ -152,9 +152,10 @@ public class PlayerBody extends Body {
 
     @Override
     public void tick() {
-        int morphineAmount = entity.hasStatusEffect(PainMain.MORPHINE_EFFECT) ? entity.getStatusEffect(PainMain.MORPHINE_EFFECT).getAmplifier() + 2 : 1;
-        //System.out.println(getAmplifier(getPart(PainMain.id("right_leg"))));
-        //int amplifier;
+        if (entity != null) {
+            int morphineAmount = entity.hasStatusEffect(PainMain.MORPHINE_EFFECT) ? entity.getStatusEffect(PainMain.MORPHINE_EFFECT).getAmplifier() + 2 : 1;
+            //System.out.println(getAmplifier(getPart(PainMain.id("right_leg"))));
+            //int amplifier;
         /*//legs and foot
         amplifier = -morphineAmount;
         amplifier += getAmplifier(getPart(PainMain.id("right_leg")));
@@ -172,17 +173,18 @@ public class PlayerBody extends Body {
         amplifier += getAmplifier(getPart(PainMain.id("torso")));
         amplifier += getAmplifier(getPart(PainMain.id("head")));
         applyStatusEffectWithAmplifier(StatusEffects.WEAKNESS, amplifier);*/
-        this.debuffs.forEach((effect, debuffs) -> {
-            AtomicInteger amplifier = new AtomicInteger(-morphineAmount);
-            AtomicInteger duration = new AtomicInteger(0);
+            this.debuffs.forEach((effect, debuffs) -> {
+                AtomicInteger amplifier = new AtomicInteger(-morphineAmount);
+                AtomicInteger duration = new AtomicInteger(0);
 
-            debuffs.forEach((debuff -> {
-                amplifier.getAndAdd(debuff.runner().run(debuff.part()));
-                duration.getAndAdd(debuff.duration());
-            }));
-            //System.out.println(amplifier.get());
-            applyStatusEffectWithAmplifier(effect, duration.get(), amplifier.get());
-        });
+                debuffs.forEach((debuff -> {
+                    amplifier.getAndAdd(debuff.runner().run(debuff.part()));
+                    duration.getAndAdd(debuff.duration());
+                }));
+                //System.out.println(amplifier.get());
+                applyStatusEffectWithAmplifier(effect, duration.get(), amplifier.get());
+            });
+        }
     }
 
     public void applyStatusEffectWithAmplifier(StatusEffect effect, int duration, int amplifier){
