@@ -42,8 +42,15 @@ public class Body {
 
     public DamageDistribution currentDistribution = null;
 
+    public boolean fatality = false;
+    public boolean newlyLoaded = false;
+
+
     public void initBodyParts() {
         for (BodyPart part : this.bodyParts.values()) {
+            if (entity instanceof PlayerEntity) {
+                //PainMain.log("setting part ; " + part.id );
+            }
             part.health = part.getPartMaxHealth();
         }
     }
@@ -87,19 +94,30 @@ public class Body {
         return new SplitAllDamageDistribution();
     }
 
+    public DamageDistribution get() {
+        if (this.currentDistribution != null) {
+            return this.currentDistribution;
+        }
+        PainMain.log("Damage was somehow null");
+        return new SplitAllDamageDistribution();
+    }
+
     public void setDistribution(DamageSource source) {
+        PainMain.log(source.toString());
         this.currentDistribution = getDistribution(source);
     }
 
-    public void applyDamage(DamageSource source, float amount) {
-        //DamageDistribution dist = getDistribution(source);
-        PainMain.log(currentDistribution + "");
-        if (currentDistribution != null) {
-            currentDistribution.handleDamage(amount, currentDistribution.getRealParts(), entity, this);
-            return;
+    public float applyDamage(float original, float amount) {
+        DamageDistribution dist = get();
+        PainMain.log(dist.getIdentifier() + " " + amount);
+        dist.handleDamage(amount, dist.getRealParts(), entity, this);
+
+        if (isFatal()) {
+            setFatality(false);
+            return 0;
         }
 
-        PainMain.log("Damage was somehow null");
+        return original;
 
         /*List<EquipmentSlot> meleeSlots = PlayerSizeHelper.getMeleeDistribution((PlayerEntity) entity, source);
         if (meleeSlots != null) {
@@ -117,6 +135,14 @@ public class Body {
         getBodyParts().values().forEach(part -> {
             part.takeDamage(amount / getBodyParts().size());
         });*/
+    }
+
+    public boolean isFatal() {
+        return fatality;
+    }
+
+    public void setFatality(boolean fatal) {
+        this.fatality = fatal;
     }
 
     public void applyHealing(float amount) {
