@@ -18,6 +18,7 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
 import java.awt.*;
@@ -159,7 +160,6 @@ public class BodyPart {
         }
         System.out.println(og + " | " + amount + " " + id);*/
 
-
         if (amount > this.health) {
             float remaining = amount - this.health;
             if (this.parent != null) {
@@ -168,15 +168,22 @@ public class BodyPart {
         }
         setHealth(this.health - amount);
         if (this.fatal && getPartHealth() <= 0) {
-            entity.setHealth(0);
+            //entity.setHealth(0);
+            mainBody.setFatality(true);
         }
 
         for (HitDebuff hitDebuff : this.hitDebuffs) {
             if (getPartHealth() <= getPartMaxHealth() * hitDebuff.threshold()) {
-                entity.addStatusEffect(new StatusEffectInstance(hitDebuff.effect(), hitDebuff.duration(), hitDebuff.amplifier()));
+                if (entity instanceof ServerPlayerEntity serverPlayerEntity && serverPlayerEntity.networkHandler != null) {
+                    entity.addStatusEffect(new StatusEffectInstance(hitDebuff.effect(), hitDebuff.duration(), hitDebuff.amplifier()));
+                }
             }
         }
         //System.out.println(this.id + " | " + this.health);
+    }
+
+    public void fillInTheBlank(float amount) {
+        this.health = Math.min(Math.max(amount, 0), 100);
     }
 
     public void setHealth(float amount) {
