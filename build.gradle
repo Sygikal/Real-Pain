@@ -43,7 +43,7 @@ dependencies {
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-	modApi "dev.sygii:attachmentsapi:1.1.4.3"
+	modApi "dev.sygii:attachmentsapi:1.1.4.7"
 	modImplementation "me.fzzyhmstrs:fzzy_config:${project.fzzyConfigVersion}"
 
 }
