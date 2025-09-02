@@ -20,7 +20,7 @@ public class SplitAllDamageDistribution extends DamageDistribution {
     @Override
     public void handleDamage(float amount, List<BodyPart> bodyParts, LivingEntity entity, Body body) {
         body.getBodyParts().values().forEach(part -> {
-            part.takeDamage(amount / bodyParts.size());
+            part.takeDamage(amount / body.getBodyParts().size());
         });
     }
 }
