@@ -96,25 +96,26 @@ public class LivingEntityMixin {
 	private float handleHealth(float value) {
 		float oldHealth = entity.getHealth();
 		if (entity instanceof PlayerEntity player && player instanceof ServerPlayerEntity serverPlayerEntity) {
-			//PainMain.log("Setting Health: " + value);
+			PainMain.log("Setting Health: " + value);
 			if (PainAttachments.body.get(serverPlayerEntity) != null) {
 				if (PainAttachments.body.get(serverPlayerEntity).newlyLoaded) {
-					//PainMain.log("Just loaded");
+					PainMain.log("Just loaded");
 					PainAttachments.body.get(serverPlayerEntity).newlyLoaded = false;
 				}else {
 					if (oldHealth < value) {
-						//PainMain.log("Healing");
 						float amount = value - oldHealth;
+						PainMain.log("Healing: " + amount);
 						PainAttachments.body.get(serverPlayerEntity).applyHealing(amount);
-					} else if (value < oldHealth && value > 0) {
-						//PainMain.log("Damaging");
+					} else if (value < oldHealth && value > 0 && PainAttachments.body.get(entity).currentDistribution != null) {
 						float amount = oldHealth - value;
+						PainMain.log("Damaging: " + amount);
 						value = PainAttachments.body.get(entity).applyDamage(value, amount);
 					}
-					if (serverPlayerEntity.networkHandler != null) {
-						PlayerBody body = PainAttachments.body.get(serverPlayerEntity);
-						PainAttachments.body.syncFromServer(serverPlayerEntity, entity, body);
-					}
+				}
+				if (serverPlayerEntity.networkHandler != null) {
+					PainMain.log("Syncing Health");
+					PlayerBody body = PainAttachments.body.get(serverPlayerEntity);
+					PainAttachments.body.syncFromServer(serverPlayerEntity, entity, body);
 				}
 			}
 		}
