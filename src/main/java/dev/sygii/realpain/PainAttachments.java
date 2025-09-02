@@ -17,6 +17,9 @@ import net.minecraft.nbt.NbtString;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class PainAttachments implements AttachmentInitializer {
     public static AttachmentIdentifier bodyId = AttachmentIdentifier.of(PainMain.MOD_ID, "body");
     public static SyncedAttachment<PlayerBody> body;
@@ -39,21 +42,36 @@ public class PainAttachments implements AttachmentInitializer {
     public void registerSyncedAttachments(SyncedAttachmentRegistrar syncedRegistrar) {
         body = syncedRegistrar.registerSyncedAttachment(bodyId, ((buf, body) -> {
             buf.writeInt(body.getBodyParts().size());
+            //PainMain.log("Sent packet: " + body.getBodyParts().get(PainMain.id("torso")).getPartHealth());
+
             body.getBodyParts().forEach((id, part) -> {
                 buf.writeIdentifier(id);
                 buf.writeFloat(part.getPartHealth());
                 //buf.writeFloat(part.getPartMaxHealth());
             });
-        }), (buf, obj) -> {
-            PlayerBody newBody = new PlayerBody((PlayerEntity) MinecraftClient.getInstance().world.getEntityById((Integer) obj));
+        }), (ctx, buf) -> {
+            //PlayerBody newBody = new PlayerBody((PlayerEntity) MinecraftClient.getInstance().world.getEntityById((Integer) obj));
+            List<SyncedAttachment.ContextRunner> runnerList = new ArrayList<>();
+
             int size = buf.readInt();
+            //PainMain.log("Read packet: " + ((PlayerBody)obj));
+
             for (int i = 0; i < size; i++) {
                 Identifier id = buf.readIdentifier();
                 float health = buf.readFloat();
                 //float maxHealth = buf.readFloat();
-                newBody.getPart(id).setHealth(health);
+                runnerList.add((con , object) -> {
+                    ((PlayerBody)object).getPart(id).setHealth(health);
+                    return null;
+                });
             }
-            return newBody;
+            return (ctx2, object) -> {
+                for (SyncedAttachment.ContextRunner run : runnerList) {
+                    run.run(ctx2, object);
+                }
+                //PainMain.log("Read packet: " + ((PlayerBody)object).getBodyParts().get(PainMain.id("torso")).getPartHealth());
+                return object;
+            };
         });
         body.registerNBTSerializers(
                 (nbt, body) -> {
@@ -61,16 +79,19 @@ public class PainAttachments implements AttachmentInitializer {
                     body.getBodyParts().forEach((id, part) -> {
                         partsNbt.putFloat(id.toString(), part.getPartHealth());
                     });
+                    //PainMain.log("wrote nbt: " + partsNbt);
+
                     nbt.put("parts", partsNbt);
                 },
                 (nbt, obj) -> {
-                    PlayerBody newBody = new PlayerBody((PlayerEntity) obj);
+                    //PlayerBody newBody = new PlayerBody((PlayerEntity) obj);
                     NbtCompound comp = nbt.getCompound("parts");
-                    newBody.getBodyParts().forEach((id, part) -> {
+                    ((PlayerBody)obj).getBodyParts().forEach((id, part) -> {
                         float health = comp.getFloat(id.toString());
-                        newBody.getPart(id).setHealth(health);
+                        ((PlayerBody)obj).getPart(id).fillInTheBlank(health);
                     });
-                    return newBody;
+                    ((PlayerBody)obj).newlyLoaded = true;
+                    return ((PlayerBody)obj);
                 });
     }
 }
