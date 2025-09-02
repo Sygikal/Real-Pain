@@ -96,19 +96,18 @@ public class LivingEntityMixin {
 	private float handleHealth(float value) {
 		float oldHealth = entity.getHealth();
 		if (entity instanceof PlayerEntity player && player instanceof ServerPlayerEntity serverPlayerEntity) {
-			PainMain.log("Setting Health: " + value);
+			//PainMain.log("Setting Health: " + value);
 			if (PainAttachments.body.get(serverPlayerEntity) != null) {
-				PainMain.log(PainAttachments.body.get(serverPlayerEntity).getPart(PainMain.id("torso")).getPartHealth() + "");
 				if (PainAttachments.body.get(serverPlayerEntity).newlyLoaded) {
-					PainMain.log("Just loaded");
+					//PainMain.log("Just loaded");
 					PainAttachments.body.get(serverPlayerEntity).newlyLoaded = false;
 				}else {
 					if (oldHealth < value) {
-						PainMain.log("Healing");
+						//PainMain.log("Healing");
 						float amount = value - oldHealth;
 						PainAttachments.body.get(serverPlayerEntity).applyHealing(amount);
 					} else if (value < oldHealth && value > 0) {
-						PainMain.log("Damaging");
+						//PainMain.log("Damaging");
 						float amount = oldHealth - value;
 						value = PainAttachments.body.get(entity).applyDamage(value, amount);
 					}
