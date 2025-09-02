@@ -6,9 +6,7 @@ import dev.sygii.realpain.PainMain;
 import dev.sygii.realpain.body.BodyPart;
 import dev.sygii.realpain.body.damage.DamageDistribution;
 import dev.sygii.realpain.body.entity.PlayerBody;
-import dev.sygii.realpain.util.PlayerSizeHelper;
 import net.minecraft.entity.DamageUtil;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -16,24 +14,19 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ArmorItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.hit.HitResult;
-import org.apache.commons.lang3.tuple.Pair;
 import org.spongepowered.asm.mixin.Debug;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 @Debug(export =true)
@@ -98,21 +91,60 @@ public class LivingEntityMixin {
 		}
 	}
 
-	@Inject(method = "setHealth",
+	@ModifyVariable(method = "setHealth",
+			at = @At(value = "HEAD"), argsOnly = true)
+	private float handleHealth(float value) {
+		float oldHealth = entity.getHealth();
+		if (entity instanceof PlayerEntity player && player instanceof ServerPlayerEntity serverPlayerEntity) {
+			PainMain.log("Setting Health: " + value);
+			if (PainAttachments.body.get(serverPlayerEntity) != null) {
+				PainMain.log(PainAttachments.body.get(serverPlayerEntity).getPart(PainMain.id("torso")).getPartHealth() + "");
+				if (PainAttachments.body.get(serverPlayerEntity).newlyLoaded) {
+					PainMain.log("Just loaded");
+					PainAttachments.body.get(serverPlayerEntity).newlyLoaded = false;
+				}else {
+					if (oldHealth < value) {
+						PainMain.log("Healing");
+						float amount = value - oldHealth;
+						PainAttachments.body.get(serverPlayerEntity).applyHealing(amount);
+					} else if (value < oldHealth && value > 0) {
+						PainMain.log("Damaging");
+						float amount = oldHealth - value;
+						value = PainAttachments.body.get(entity).applyDamage(value, amount);
+					}
+					if (serverPlayerEntity.networkHandler != null) {
+						PlayerBody body = PainAttachments.body.get(serverPlayerEntity);
+						PainAttachments.body.syncFromServer(serverPlayerEntity, entity, body);
+					}
+				}
+			}
+		}
+		return value;
+	}
+
+	/*@Inject(method = "setHealth",
 			at = @At(value = "HEAD"))
-	private void handleSetHealth(CallbackInfo info, @Local(argsOnly = true) float health) {
-		float f = entity.getHealth();
-		float amount = health - f;
+	private void handleSetHealth(CallbackInfo info, @Local(argsOnly = true) float newHealth) {
+		float oldHealth = entity.getHealth();
 		if (entity instanceof PlayerEntity player) {
-			if (PainAttachments.body.get(player) != null) {
-				PainAttachments.body.get(player).applyHealing(amount);
+			PainMain.log(newHealth + " ");
+			if (PainAttachments.body.get(player) != null && !player.isDead()) {
+				if (oldHealth < newHealth) {
+					PainMain.log("Healing");
+					float amount = newHealth - oldHealth;
+					PainAttachments.body.get(player).applyHealing(amount);
+				}else if(newHealth < oldHealth && newHealth > 0) {
+					PainMain.log("Damaging");
+					float amount = oldHealth - newHealth;
+					PainAttachments.body.get(entity).applyDamage(null, amount);
+				}
 				if (player instanceof ServerPlayerEntity serverPlayerEntity && serverPlayerEntity.networkHandler != null) {
 					PlayerBody body = PainAttachments.body.get(serverPlayerEntity);
 					PainAttachments.body.syncFromServer(serverPlayerEntity, entity, body);
 				}
 			}
 		}
-	}
+	}*/
 
 	@ModifyArg(method = "clearStatusEffects",
 			at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;onStatusEffectRemoved(Lnet/minecraft/entity/effect/StatusEffectInstance;)V"))
